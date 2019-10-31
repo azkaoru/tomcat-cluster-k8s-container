@@ -1,0 +1,35 @@
+        <Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"
+           channelSendOptions="6" channelStartOptions="15" >
+ 
+          <Manager className="org.apache.catalina.ha.session.DeltaManager"
+             expireSessionsOnShutdown="false"
+             notifyListenersOnReplication="true"
+             notifySessionListenersOnReplication="true"/>
+ 
+          <Channel className="org.apache.catalina.tribes.group.GroupChannel">
+ 
+             <Membership className="org.apache.catalina.tribes.membership.cloud.CloudMembershipService"/>
+ 
+             <Receiver className="org.apache.catalina.tribes.transport.nio.NioReceiver"
+                address="auto"
+                port="4000"
+                maxThreads="25"
+                minThreads="25"/>
+ 
+             <Sender className="org.apache.catalina.tribes.transport.ReplicationTransmitter">
+                 <Transport className="org.apache.catalina.tribes.transport.nio.PooledParallelSender"
+                     maxRetryAttempts="1"
+                     timeout="3000"
+                     poolSize="25" />
+             </Sender>
+ 
+             <Interceptor className="org.apache.catalina.tribes.group.interceptors.TcpFailureDetector"/>
+ 
+           </Channel>
+ 
+           <Valve className="org.apache.catalina.ha.tcp.ReplicationValve"
+                  filter=".*\.gif|.*\.js|.*\.jpeg|.*\.jpg|.*\.png|.*\.htm|.*\.html|.*\.css|.*\.txt"/>
+ 
+           <ClusterListener className="org.apache.catalina.ha.session.ClusterSessionListener"/>
+ 
+        </Cluster>
