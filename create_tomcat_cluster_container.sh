@@ -34,7 +34,7 @@ buildah run tomcat${TOMCAT_VERSION}-java13 /usr/bin/rm /tmp/logging.properties
 buildah add tomcat${TOMCAT_VERSION}-java13 conf/host_cluster.xml /tmp/
 buildah run tomcat${TOMCAT_VERSION}-java13 /usr/bin/awk -i inplace '/\SingleSignOn/{while(getline line<"/tmp/host_cluster.xml"){print line}} //' /opt/tomcat9/conf/server.xml
 buildah run tomcat${TOMCAT_VERSION}-java13 /usr/bin/rm /tmp/host_cluster.xml
-
+buildah config --port 8080 tomcat${TOMCAT_VERSION}-java13
 buildah config  --entrypoint  '["/opt/tomcat9/bin/catalina.sh", "run"]' --workingdir /opt/tomcat9  tomcat${TOMCAT_VERSION}-java13
 buildah commit tomcat${TOMCAT_VERSION}-java13 quay.io/${QUAY_USER}/tomcat${TOMCAT_VERSION}-cluster-java13
 
